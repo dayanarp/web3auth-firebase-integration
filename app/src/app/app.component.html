@@ -1,0 +1,36 @@
+<div class="content">
+  <h1 class="title">Web3Auth & Firebase</h1>
+  <div class="setting">
+    <div *ngIf="connected">  
+    <button class="card card-small" (click)="logout()">Log Out</button>
+      <div class="console" id="console-ui">
+        <p class="code">Add user to Whitelist</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+            <label class="form-label" style="margin-right: 10px;">Email</label>
+            <input type="text"class="form-control"   style="margin-bottom: 10px;" formControlName="email">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" style="margin-right: 10px;">Wallet</label>
+            <input class="form-control" style="margin-bottom: 10px;"cols="30" rows="10" formControlName="wallet">
+        </div>
+        <input type="submit" value="Add User" class="btn btn-info">
+    </form>
+
+    <div class="console" id="console-ui">
+      <p class="code">Whitelist:</p>
+    </div>
+    <div class="place" *ngFor="let user of users">
+      <div class="info">
+          <h4>{{user.email}}</h4>
+          <p>{{user.wallet}}</p>
+      </div>
+  </div>
+    </div> 
+      <div *ngIf="!connected" class="card-container">
+        <button class="card card-small" (click)="login()">Login</button>
+      </div>
+  </div>
+</div>
