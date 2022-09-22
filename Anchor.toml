@@ -1,8 +1,14 @@
 [features]
-seeds = false
+seeds = true
 skip-lint = false
 [programs.localnet]
-web3auth_firebase_integration = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+disco ="2c4WTKr4rQ5xEdeQVoaHGb9sBXhbyRXBKi6qLbt5SKGA"
+
+[test.validator]
+url = "https://api.devnet.solana.com"
+[[test.validator.clone]]
+address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+
 
 [registry]
 url = "https://api.apr.dev"
