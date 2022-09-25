@@ -7,21 +7,23 @@ import { getAuth, provideAuth } from '@angular/fire/auth'
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { StoreModule } from '@ngrx/store';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HdWalletAdapterModule } from './wallet-adapter.module';
+import { FormsModule } from '@angular/forms';
+import { HomeComponent } from './home.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent, HomeComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     StoreModule.forRoot({}, {}),
-    ReactiveFormsModule
+    HdWalletAdapterModule.forRoot({ autoConnect: true }),
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

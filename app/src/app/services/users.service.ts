@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, doc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, collectionData, doc, deleteDoc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { User } from './../models/user';
 
@@ -17,11 +17,16 @@ export class UsersService {
 
   getUsers(): Observable<User[]> {
     const userRef = collection(this.firestore, 'users');
-    return collectionData(userRef, { idField: 'id' }) as Observable<User[]>;
+    return collectionData(userRef, { idField: 'pk' }) as Observable<User[]>;
   }
 
   deleteUser(user: User) {
-    const userDocRef = doc(this.firestore, `users/${user.id}`);
+    const userDocRef = doc(this.firestore, `users/${user.pk}`);
     return deleteDoc(userDocRef);
+  }
+
+  async getUser(pk:string) : Promise<User>{
+    const userDocRef = doc(this.firestore, `users/${pk}`);
+    return (await getDoc(userDocRef)).data() as User;
   }
 }

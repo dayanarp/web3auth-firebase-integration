@@ -1,52 +1,38 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Web3AuthStore } from './store/web3Auth.store';
-import { FormControl, FormGroup } from '@angular/forms';
-import { UsersService } from './services/users.service';
-import { User } from './models/user';
+import { Component, inject, OnInit } from "@angular/core";
+import { UsersService } from "./services/users.service";
+import { ConnectionStore } from "./store/connection.store";
+import { WalletStore } from "./store/wallet.store";
+import {
+  LedgerWalletAdapter,
+  PhantomWalletAdapter,
+  SlopeWalletAdapter,
+  SolflareWalletAdapter,
+  SolletWalletAdapter,
+  TorusWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: "app-root",
+  template: `<wa-home> </wa-home> `,
 })
-
-export class AppComponent implements OnInit{
-  private readonly _web3auth = inject(Web3AuthStore);
-
+export class AppComponent implements OnInit {
   connected: boolean = false;
-  form: FormGroup;
-  users: User[] = [];
 
-  constructor(private userService: UsersService){
-    this._web3auth.connected$.subscribe((value: boolean) => (this.connected = value));
-    this.form = new FormGroup({
-      email: new FormControl(),
-      wallet: new FormControl()
-    });
-  }
+  constructor(
+    private _connectionStore: ConnectionStore,
+    private _walletStore: WalletStore
+  ) {}
 
   async ngOnInit() {
-    this._web3auth.initialize();
-    this.userService.getUsers().subscribe(users => {
-      this.users = users;
-    })
+    this._connectionStore.setEndpoint("http://api.devnet.solana.com");
+    this._walletStore.setAdapters([
+      new PhantomWalletAdapter(),
+      new SlopeWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new TorusWalletAdapter(),
+      new LedgerWalletAdapter(),
+      new SolletWalletAdapter({ network: WalletAdapterNetwork.Devnet }),
+    ]);
   }
-
-  // LOGIN
-  async login() {
-    this._web3auth.connect();
-  }
-
-  // LOGIN
-  async logout() {
-    this._web3auth.disconnect();
-  }
-
-  // ADD USER TO WHITELIST
-  async onSubmit() {
-    console.log(this.form.value)
-    const response = await this.userService.addUser(this.form.value);
-    console.log("RESPONSE: ", response);
-  }
-
 }
